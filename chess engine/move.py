@@ -12,6 +12,4 @@ class Move:
     def __eq__(self, other):
         if not isinstance(other, Move):
             return False
-        if self.fromRow == other.fromRow and self.fromCol == other.fromCol and self.toRow == other.toRow and self.toCol == other.toCol:
-            return True 
-        return False
+        return self.fromRow == other.fromRow and self.fromCol == other.fromCol and self.toRow == other.toRow and self.toCol == other.toCol

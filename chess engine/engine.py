@@ -3,7 +3,7 @@ from move import Move
 class Engine:
     def __init__(self,board):
         self.board = board
-
+        self.current_turn = 'white'
     
 
     def is_square_attacked(self, row, col, by_color): # Color of opponent's piece
@@ -104,3 +104,16 @@ class Engine:
             self.board.make_move(move)
             self.switch_turn()
             return True
+    
+    def get_game_state(self):
+        for row in range(len(self.board._grid)):
+            for col in range(len(self.board._grid[0])):
+                currentPiece = self.board.get_piece(row, col)
+                if currentPiece is not None and currentPiece.color == self.current_turn:
+                    legalMoves = self.get_legal_moves_for_piece(row, col)
+                    if len(legalMoves) > 0:
+                        return 'ongoing'
+        if self.is_in_check(self.current_turn):
+            return 'checkmate'
+        else:
+            return 'stalemate'
