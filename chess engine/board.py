@@ -3,6 +3,7 @@ from move import Move
 class Board:
     def __init__(self):
         self._grid = [[None for col in range(8)] for row in range(8)]
+        self.en_passant_target = None
     
     def _is_within_bounds(self,row,col):
         if row < 0 or row > 7 or col < 0 or col > 7:
@@ -32,15 +33,26 @@ class Board:
         moving_piece = self.get_piece(move.fromRow, move.fromCol)
         if moving_piece is None:
             raise ValueError("No piece at source square")
-        captured_piece = self.get_piece(move.toRow, move.toCol)
+        if move.is_en_passant:
+            captured_piece = self.get_piece(move.fromRow, move.toCol)
+            self.set_piece(move.fromRow, move.toCol, None)
+            move.capturedPiece = captured_piece
+        else:
+            captured_piece = self.get_piece(move.toRow, move.toCol)
+            move.capturedPiece = captured_piece
+
         self.set_piece(move.fromRow, move.fromCol, None)
         self.set_piece(move.toRow, move.toCol, moving_piece)
-        move.capturedPiece = captured_piece
 
     def undo_move(self,move):
         moving_piece = self.get_piece(move.toRow, move.toCol)
         if moving_piece is None:
             raise ValueError("No piece at source square")
-        self.set_piece(move.toRow, move.toCol, move.capturedPiece)
+        if move.is_en_passant:
+            self.set_piece(move.fromRow, move.toCol, move.capturedPiece)
+            self.set_piece(move.toRow, move.toCol, None)
+        else:
+            self.set_piece(move.toRow, move.toCol, move.capturedPiece)
         self.set_piece(move.fromRow, move.fromCol, moving_piece)
         
+    

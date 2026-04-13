@@ -5,7 +5,7 @@ class Move:
         self.toRow = toRow
         self.toCol = toCol
         self.capturedPiece = None
-
+        self.is_en_passant = False
         # To-do: add additional attributes to represent the special cases
         # like en passant, castling, pawn promotion etc.
 

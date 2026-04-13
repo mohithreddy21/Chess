@@ -59,11 +59,11 @@ class Knight(Piece):
         return pseudoValidPositions
     
 class Pawn(Piece):
+    
     def get_valid_moves(self, board, row, col):
-        pseudoValidPositions = []
         FORWARD = -1 if self.color == 'white' else 1
         START_ROW = 6 if self.color == 'white' else 1
-
+        pseudoValidPositions = []
         if board._is_within_bounds(row + FORWARD, col) and board.get_piece(row + FORWARD, col) is None:
             pseudoValidPositions.append((row + FORWARD, col))
 
@@ -79,6 +79,9 @@ class Pawn(Piece):
             if board._is_within_bounds(diagonalRow, diagonalCol):
                 existingPiece = board.get_piece(diagonalRow, diagonalCol)
                 if existingPiece is not None and existingPiece.color != self.color:
+                    pseudoValidPositions.append((diagonalRow, diagonalCol))
+                # en passant case
+                if existingPiece is None and (diagonalRow, diagonalCol) == board.en_passant_target:
                     pseudoValidPositions.append((diagonalRow, diagonalCol))
 
         return pseudoValidPositions

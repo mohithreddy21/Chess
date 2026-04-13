@@ -1,5 +1,6 @@
 from pieces import Pawn, Knight, Bishop, Queen, Rook, King
 from move import Move
+
 class Engine:
     def __init__(self,board):
         self.board = board
@@ -18,7 +19,7 @@ class Engine:
                 if isinstance(existingPiece, Pawn) and existingPiece.color == by_color:
                     return True
             
-        # Knigh attack detection 
+        # Knight attack detection 
         
         for delta in Knight.DIRECTIONS:
             currentRow, currentCol = row + delta[0], col + delta[1]
@@ -65,7 +66,7 @@ class Engine:
 
     def _find_king(self,color):
         for row in range(len(self.board._grid)):
-            for col in range(len(self.board._grid)):
+            for col in range(len(self.board._grid[0])):
                 square = self.board.get_piece(row,col)
                 if isinstance(square, King) and square.color == color:
                     return row, col
@@ -84,6 +85,8 @@ class Engine:
         for pMove in pseudoLegalMoves:
             toRow, toCol = pMove
             move = Move(row, col, toRow, toCol)
+            if self.board.en_passant_target and (toRow, toCol) == self.board.en_passant_target:
+                move.is_en_passant = True
             self.board.make_move(move)
             if not self.is_in_check(currentPiece.color):
                 LegalMoves.append(move)
@@ -97,11 +100,16 @@ class Engine:
             return False
         if sourcePiece.color != self.current_turn:
             return False
-        legalMoves = self.get_legal_moves_for_piece(move.fromRow, move.fromCol)
+        legalMoves = self.get_legal_moves_for_piece(move.fromRow, move.fromCol) 
         if move not in legalMoves:
             return False
         else:
             self.board.make_move(move)
+            if isinstance(sourcePiece, Pawn) and abs(move.toRow - move.fromRow) > 1:
+                middleSquare = ((move.fromRow + move.toRow)//2, move.toCol)
+                self.board.en_passant_target = middleSquare
+            else:
+                self.board.en_passant_target = None
             self.switch_turn()
             return True
     
