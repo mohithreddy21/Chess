@@ -6,7 +6,7 @@ import secrets
 
 from websockets.asyncio.server import broadcast, serve
 
-from connect4 import PLAYER1, PLAYER2, Connect4
+from websockets.connect4 import PLAYER1, PLAYER2, Connect4
 
 
 JOIN = {}
