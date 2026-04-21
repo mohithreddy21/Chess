@@ -1,5 +1,5 @@
-from pieces import Piece
-from move import Move
+from Core.pieces import Piece
+from Core.move import Move
 class Board:
     def __init__(self):
         self._grid = [[None for col in range(8)] for row in range(8)]

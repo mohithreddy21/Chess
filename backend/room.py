@@ -1,7 +1,9 @@
 import random
+import json
 from enum import Enum
 from Core.board import Board
 from Core.engine import Engine
+
 
 
 class RoomState(Enum):
@@ -27,6 +29,14 @@ class Room:
         board = Board()
         self.engine = Engine(board)
 
+    async def notify_players(self, type, message, state = 'ongoing', notify = 'both'):
+        notification = json.dumps({'type':type,'message':message, 'state': state})
+        if notify == 'both':
+            for player in self.participants.values():
+                await player.send(notification)
+        else:
+            player = self.participants[notify]
+            await player.send(notification)
 
     def add_participants(self, player):
         self.temp.append(player)

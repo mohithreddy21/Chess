@@ -1,5 +1,5 @@
-from pieces import Pawn, Knight, Bishop, Queen, Rook, King
-from move import Move
+from Core.pieces import Pawn, Knight, Bishop, Queen, Rook, King
+from Core.move import Move
 
 class Engine:
     def __init__(self,board):
@@ -94,25 +94,9 @@ class Engine:
 
         return LegalMoves
     
-    def play_move(self, move): # This method simulates a player's turn
-        sourcePiece = self.board.get_piece(move.fromRow, move.fromCol)
-        if sourcePiece is None:
-            return False
-        if sourcePiece.color != self.current_turn:
-            return False
-        legalMoves = self.get_legal_moves_for_piece(move.fromRow, move.fromCol) 
-        if move not in legalMoves:
-            return False
-        else:
-            self.board.make_move(move)
-            if isinstance(sourcePiece, Pawn) and abs(move.toRow - move.fromRow) > 1:
-                middleSquare = ((move.fromRow + move.toRow)//2, move.toCol)
-                self.board.en_passant_target = middleSquare
-            else:
-                self.board.en_passant_target = None
-            self.switch_turn()
-            return True
-    
+    def switch_turn(self):
+        self.current_turn = 'white' if self.current_turn == 'black' else 'black'
+
     def get_game_state(self):
         for row in range(len(self.board._grid)):
             for col in range(len(self.board._grid[0])):
@@ -125,3 +109,32 @@ class Engine:
             return 'checkmate'
         else:
             return 'stalemate'
+    
+    def play_move(self, move): # This method simulates a player's turn
+        sourcePiece = self.board.get_piece(move.fromRow, move.fromCol)
+        if sourcePiece is None:
+            return ('empty', None, self.current_turn)
+        if sourcePiece.color != self.current_turn:
+            return ('invalid', None, self.current_turn)
+        legalMoves = self.get_legal_moves_for_piece(move.fromRow, move.fromCol) 
+        if move not in legalMoves:
+            return ('invalid', None, self.current_turn)
+        else:
+            self.board.make_move(move)
+            if isinstance(sourcePiece, Pawn) and abs(move.toRow - move.fromRow) > 1:
+                middleSquare = ((move.fromRow + move.toRow)//2, move.toCol)
+                self.board.en_passant_target = middleSquare
+            else:
+                self.board.en_passant_target = None
+
+            gameState = self.get_game_state()
+            if gameState == 'checkmate':
+                winner = 'black' if self.current_turn == 'white' else 'white'
+                return (gameState, winner, self.current_turn)
+            elif gameState == 'stalemate':
+                return (gameState, 'Draw', self.current_turn)
+            else:
+                self.switch_turn()
+                return (gameState, None, self.current_turn) # (game sate, extra, player)
+            
+    
