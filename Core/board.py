@@ -1,8 +1,6 @@
 from Core.pieces import Piece, Pawn, Rook, Knight, Bishop, Queen, King
 from Core.move import Move
 class Board:
-
-
     def __init__(self):
         self._grid = [[None for col in range(8)] for row in range(8)]
         self.en_passant_target = None
