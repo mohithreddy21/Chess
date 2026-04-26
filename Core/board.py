@@ -1,10 +1,39 @@
-from Core.pieces import Piece
+from Core.pieces import Piece, Pawn, Rook, Knight, Bishop, Queen, King
 from Core.move import Move
 class Board:
+
+
     def __init__(self):
         self._grid = [[None for col in range(8)] for row in range(8)]
         self.en_passant_target = None
+        self.standard_board()
     
+    def standard_board(self):
+        for row in [0, 1, 6, 7]:
+            color = 'black' if row in [0,1] else 'white'
+            for col in range(8):
+                if row in [1, 6]:
+                    pawn = Pawn(color)
+                    self.set_piece(row, col, pawn)
+                elif row in [0, 7]:
+                    if col in [0, 7]:
+                        rook = Rook(color)
+                        self.set_piece(row, col, rook)
+                    elif col in [1, 6]:
+                        knight = Knight(color)
+                        self.set_piece(row, col, knight)
+                    elif col in [2, 5]:
+                        bishop = Bishop(color)
+                        self.set_piece(row, col, bishop)
+                    elif col == 3:
+                        queen = Queen(color)
+                        self.set_piece(row, col, queen)
+                    elif col == 4:
+                        king = King(color)
+                        self.set_piece(row, col, king)
+
+                
+
     def _is_within_bounds(self,row,col):
         if row < 0 or row > 7 or col < 0 or col > 7:
             return False

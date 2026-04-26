@@ -1,0 +1,11 @@
+# Sensitive
+.env
+
+# Auto-generated
+__pycache__/
+venv/
+*.pyc
+
+# Editor specific — only relevant to your machine
+.vscode/
+.idea/
