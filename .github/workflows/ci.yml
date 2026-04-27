@@ -1,0 +1,16 @@
+name: test-workflow
+on: push
+
+jobs: 
+    job_1:
+        runs-on: ubuntu-latest
+        
+        steps: 
+            - name: Setup Server
+              uses: actions/checkout@v3
+
+            - name: Install Dependencies
+              run: pip install -r requirements.txt
+
+            - name: Unit Testing
+              run: pytest

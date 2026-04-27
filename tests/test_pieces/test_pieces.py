@@ -1,19 +1,30 @@
 # Testing Pawn
+import pytest
 from Core.pieces import Pawn
 from Core.board import Board
 
-def test_pawn_starting_moves():
-    # white pawn starting position
-    white = Pawn("white")
-    board = Board()
-    board.set_piece(6, 0, white)
-    moves = white.get_valid_moves(board, 6, 0)
-    assert (5, 0) in moves
-    assert (4, 0) in moves
 
-    # black pawn starting position
-    black = Pawn("black")
-    board.set_piece(1, 0, black)
-    moves = black.get_valid_moves(board, 1, 0)
-    assert (2, 0) in moves
-    assert (3, 0) in moves
+@pytest.mark.parametrize("color, row, col", [("white", 6, 0), ("black", 1, 0)])
+def test_pawn_starting_moves(color, row, col):
+    # white pawn starting position
+    pawn = Pawn(color)
+    board = Board()
+    board.set_piece(row, col, pawn)
+    moves = pawn.get_valid_moves(board, row, col)
+    FORWARD = -1 if color == 'white' else 1
+    assert (row + FORWARD, 0) in moves
+    assert (row + 2 * FORWARD, 0) in moves
+
+
+@pytest.mark.parametrize("color,row,blocker_row", [
+    ("white", 4, 3),
+    ("black", 3, 4),
+])
+def test_pawn_blocked(color, row, blocker_row):
+    board = Board()
+    pawn = Pawn(color)
+    blocker = Pawn("black" if color == "white" else "white")
+    board.set_piece(row, 0, pawn)
+    board.set_piece(blocker_row, 0, blocker)
+    moves = pawn.get_valid_moves(board, row, 0)
+    assert len(moves) == 0
