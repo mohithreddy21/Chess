@@ -13,7 +13,7 @@ jobs:
               run: pip install -r requirements.txt
 
             - name: Unit Testing
-              run: python main.py
+              run: pytest tests/test_pieces tests/test_board
             
             - name: Build Image
               run: docker compose build
