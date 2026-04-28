@@ -3,6 +3,7 @@ services:
     build: .
     ports:
       - "8000:8000"
+    image: mohithailuri/chess-backend:latest
     environment:
       - PORT=8000
   
@@ -10,3 +11,4 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
+    image: mohithailuri/chess-frontend:latest
