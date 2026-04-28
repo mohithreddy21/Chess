@@ -14,3 +14,6 @@ jobs:
 
             - name: Unit Testing
               run: pytest
+            
+            - name: Build Image
+              run: docker compose build
