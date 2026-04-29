@@ -7,7 +7,7 @@ jobs:
         
         steps: 
             - name: Setup Server
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Install Dependencies
               run: pip install -r requirements.txt
